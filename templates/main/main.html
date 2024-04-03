@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Блог школы
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center mb-4">Главная страница школы</h1>
+    <div class="container">
+        {% for new in news %}
+            <div class="dark-card ">
+                <div class="card-body">
+                    <h5 class="card-title">{{ new.title }}</h5>
+                    <p class="card-text">{{ new.description }}</p>
+                    <p class="card-text"><small class="text-muted">{{ new.date }}</small></p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

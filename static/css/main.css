@@ -1,0 +1,61 @@
+.body {
+    background: url("../1639899020_3-abrakadabra-fun-p-fon-na-temu-shkola-3.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: #d1d1d1;
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.footer-text {
+    color: white;
+}
+
+
+.content-wrap {
+    flex: 1;
+    min-height: 100vh;
+}
+
+.footer {
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+.footer, .content-wrap:after {
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    height: 60px;
+    width: 100%;
+}
+
+.dark-card {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: rgba(203, 202, 202, 0.32);
+    border: solid;
+    border-radius:20px ;
+}
+.custom-sidebar {
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+    border-radius: 15px; /* Округление углов */
+    color: #fff; /* Белый текст */
+}
+
+.custom-sidebar .nav-link {
+    color: #fff; /* Белый цвет для ссылок */
+}
+
+.custom-sidebar .nav-link:hover {
+    color: #ddd; /* Светло-серый цвет для ссылок при наведении */
+}

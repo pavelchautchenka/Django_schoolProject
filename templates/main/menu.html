@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">Главная </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="navbar-brand" aria-current="page" href="{% url "gallery" %}">Галерея</a>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" href="{% url 'info' %}">Поступающим</a>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" href="{% url 'contacts' %}">Контакты</a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'student_diary' %}">Мой кабинет</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">Регистрация
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'register_student' %}">Учащийся</a></li>
+                            <li><a class="dropdown-item" href="{% url 'register_parent' %}">Родитель</a></li>
+                            <li><a class="dropdown-item" href="{% url 'register_teacher' %}">Учитель</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Войти </a>
+                    </li>
+                    
+                {% endif %}
+                <li class="nav-item ">
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="поиск" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    </form>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>

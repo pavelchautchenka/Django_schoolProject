@@ -1,0 +1,36 @@
+{% extends "main/base.html" %}
+
+
+
+{% block content %}
+
+<style>
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px; 
+    }
+    .gallery img {
+        width: calc(33.333% - 30px); 
+        height: auto; 
+    }
+</style>
+    
+    <h2 style="text-align: center"> Наша Галлерея:</h2>
+
+<div class="gallery">
+    
+    <img src="/media/background-for-school-school-theme-inscription-in-a-notebook-ink-drawing-training-lessons-time_497922-1085.jpg" alt="Описание фото 1">
+    <img src="/media/background-for-school-school-theme-inscription-in-a-notebook-ink-drawing-training-lessons-time_497922-1085.jpg" alt="Описание фото 1">
+    <img src="/media/background-for-school-school-theme-inscription-in-a-notebook-ink-drawing-training-lessons-time_497922-1085.jpg" alt="Описание фото 1">
+   <img src="/media/background-for-school-school-theme-inscription-in-a-notebook-ink-drawing-training-lessons-time_497922-1085.jpg" alt="Описание фото 1">
+    <img src="/media/background-for-school-school-theme-inscription-in-a-notebook-ink-drawing-training-lessons-time_497922-1085.jpg" alt="Описание фото 1">
+    <img src="/media/background-for-school-school-theme-inscription-in-a-notebook-ink-drawing-training-lessons-time_497922-1085.jpg" alt="Описание фото 1">
+    
+</div>
+
+
+    
+    
+    
+{% endblock %}

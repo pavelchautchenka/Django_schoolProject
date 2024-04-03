@@ -1,0 +1,16 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <form method="post" class="border p-4 rounded">
+            <h2 class="text-center mb-4">Вход в кабинет {{ role|capfirst }}</h2>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Войти</button>
+            <input type="hidden" name="next" value="{{ next }}"/>
+            
+        </form>
+        <br>
+    <a href="#" class="btn btn-primary">Забыли пароль ?</a>
+        </div>
+{% endblock %}

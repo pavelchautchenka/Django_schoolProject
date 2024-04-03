@@ -1,0 +1,38 @@
+{% extends "student/student_diary.html" %}
+
+
+
+ {% block content %}
+   
+    <h1 align="center">Личный кабинет {{ user.first_name }}</h1>
+
+    {% if grades %}
+        <h2 align="center">Ваши оценки:</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Предмет</th>
+                    <th>Оценка</th>
+                    <th>Учитель</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in grades %}
+                    <tr>
+                        <td>{{ grade.subject.name }}</td>
+                        <td>{{ grade.grade }}</td>
+                        <td>{{ grade.teacher.user.first_name|add:" " |add:grade.teacher.user.last_name }}</td>
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p align="center">Оценки отсутствуют.</p>
+    {% endif %}
+
+
+
+
+  
+{% endblock %}

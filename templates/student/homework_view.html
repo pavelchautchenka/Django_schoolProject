@@ -1,0 +1,35 @@
+{% extends "student/student_diary.html" %}
+
+{% block content %}
+
+
+    <h1 align="center">Личный кабинет {{ user.first_name }}</h1>
+
+    {% if homeworks %}
+        <h2 align="center">Ваши домашние задания:</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Предмет</th>
+                <th>Описание</th>
+                <th>Учитель</th>
+                <th>Сдать до:</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for homework in homeworks %}
+                <tr>
+                    <td>{{ homework.subject }}</td>
+                    <td>{{ homework.description }}</td>
+                    <td>{{ homework.teacher }}</td>                        
+                    <td>{{ homework.date_deadline }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p align="center">Нету домашних заданий ))))).</p>
+    {% endif %}
+
+{% endblock %}
