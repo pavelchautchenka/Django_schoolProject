@@ -1,7 +1,7 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 from .forms import StudentRegisterForm, ParentRegisterForm, TeacherRegisterForm
-from app.models import Student, Teacher, Parent, Grades, ScheduleExams, HomeWork
+from app.models import Student, Teacher, Parent, Grades, ScheduleExams, ScheduleLessons, HomeWork
 from app.models import News
 from app.services import send_activation_email
 from django.contrib.auth.forms import AuthenticationForm
@@ -86,7 +86,7 @@ def logout_user(request):
 
 
 @login_required
-def student_diary(request):
+def student_dashboard(request):
     students = Student.objects.get(user=request.user)
     grades = Grades.objects.filter(student=students)
     return render(request, 'student/diary_grade.html', {"grades": grades})
@@ -108,6 +108,26 @@ def home_work_views(request):
     return render(request, 'student/homework_view.html', {"homeworks": homeworks})
 
 
+from django.db.models import DateField
+from django.db.models.functions import Trunc
+
 @login_required
 def schedule_lessons_view(request):
-#TODO: доделать функцию. Надо достать все занятия для Student
+    current_date = datetime.now()
+    student = Student.objects.get(user=request.user)
+    lessons = ScheduleLessons.objects.filter(group=student.school_group, date__gte=current_date)
+    lessons = lessons.annotate(date_only=Trunc('date', 'day', output_field=DateField())).order_by('date_only')
+
+    lessons_by_date = {}
+    for lesson in lessons:
+        lessons_by_date.setdefault(lesson.date_only, []).append(lesson)
+
+    return render(request, 'student/schedule_lessons.html', {'lessons_by_date': lessons_by_date})
+
+
+@login_required
+def parent_dashboard(request):
+    parent = Parent.objects.get(user=request.user)
+    student = Student.objects.get(parent=parent)
+
+    return render(request, 'parent/parent_main.html', )

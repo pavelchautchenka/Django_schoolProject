@@ -1,37 +1,35 @@
 {% extends "student/student_diary.html" %}
 
-{%  block content %}
-    
-    
+{% block content %}
     <h1 align="center">Личный кабинет {{ user.first_name }}</h1>
 
-    {% if exams %}
-        <h2 align="center">Ваши предстоящие экзамены и контрольные:</h2>
+    {% for date, lessons_on_date in lessons_by_date.items %}
+        <h2 align="center">{{ date }}: Ваши занятия</h2>
         <table class="table">
             <thead>
                 <tr>
                     <th>Предмет</th>
-                    <th>Дата</th>
-                    <th>Учитель</th>
-                    
+                    <th>Описание</th>
+                    <th>Дата / Время</th>
+                    <td>Учитель</td>
                 </tr>
             </thead>
             <tbody>
-                {% for exam in exams %}
-                    <tr>
-                        <td>{{ exam.subject.name }}</td>
-                        <td>{{ exam.date }}</td>
-                        <td>
-                            {% for teacher in exam.teacher.all %}
-                                {{ teacher.user.first_name }} {{ teacher.user.last_name }}<br>
-                            {% endfor %}
-                        </td>
-                    </tr>
+                {% for lesson in lessons_on_date %}
+                    {% for teacher in lesson.teacher.all %}
+                        <tr>
+                            <td>{{ lesson.subject.name }}</td>
+                            <td>{{ lesson.description }}</td>
+                            <td>{{ lesson.date }}</td>
+                            <td>{{ teacher.user.first_name }} {{ teacher.user.last_name }}</td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
             </tbody>
         </table>
-    {% else %}
-        <p align="center">Нету экзаменов .</p>
-    {% endif %}
+        {% if not forloop.last %}
+            <hr> <!-- Разделитель между датами -->
+        {% endif %}
+    {% endfor %}
 
 {% endblock %}

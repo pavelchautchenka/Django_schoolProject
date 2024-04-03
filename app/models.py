@@ -113,7 +113,7 @@ class ScheduleExams(models.Model):
 class ScheduleLessons(models.Model):
     subject = models.ForeignKey("Subject", on_delete=models.DO_NOTHING, null=True)
     description = models.TextField(null=True)
-    date = models.DateField()
+    date = models.DateTimeField(default=None)
     teacher = models.ManyToManyField("Teacher")
     group = models.ForeignKey("SchoolGroup", on_delete=models.DO_NOTHING, null=True)
 
@@ -135,7 +135,7 @@ from django.db import models
 
 class Photo(models.Model):
     title = models.CharField(max_length=100,)
-    image = models.ImageField(upload_to='media/z ',)
+    image = models.ImageField(upload_to='media/',)
 
 
     def __str__(self):

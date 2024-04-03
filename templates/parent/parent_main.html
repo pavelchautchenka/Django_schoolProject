@@ -1,0 +1,34 @@
+{% extends "main/base.html" %}
+
+{% block sidebar %}
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="sidebar col-lg-2 d-md-block custom-sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'schedule_lessons' %}">Расписание занятий на неделю</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'schedule_exams' %}">Расписание контрольных и экзаменов</a>
+                        </li>
+                        <li class="nav-itemv">
+                            <a class="nav-link active " href={% url 'home_work' %}>Домашние задания</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+
+
+
+{% endblock %}
