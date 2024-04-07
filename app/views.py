@@ -1,7 +1,7 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 from .forms import StudentRegisterForm, ParentRegisterForm, TeacherRegisterForm
-from app.models import Student, Teacher, Parent, Grades, ScheduleExams, ScheduleLessons, HomeWork
+from app.models import Student, Teacher, Parent, Grades, ScheduleExams, ScheduleLessons, HomeWork, Message
 from app.models import News
 from app.services import send_activation_email
 from django.contrib.auth.forms import AuthenticationForm
@@ -37,6 +37,13 @@ def register_user(request, user_type):
                 school_group = form.cleaned_data.get('school_group')
                 student = model_classes[user_type].objects.create(user=user, school_group=school_group)
                 school_group.students.add(student)
+            elif user_type == 'parent':
+                parent = model_classes[user_type].objects.create(user=user)
+                # Добавление детей к родителю
+                for student in form.cleaned_data.get('students', []):
+                    parent.students.add(student)
+                    student.parents.add(parent)
+                    student.save()
             else:
                 model_classes[user_type].objects.create(user=user)
             send_activation_email(user=user, request=request)
@@ -46,6 +53,7 @@ def register_user(request, user_type):
 
     return render(request, 'user/registration.html', {'form': form, 'role': user_type})
 
+
 def contacts_views(request: WSGIRequest):
     return render(request, 'main/contacts.html')
 
@@ -53,9 +61,10 @@ def contacts_views(request: WSGIRequest):
 def info_views(request: WSGIRequest):
     return render(request, 'main/info_for_stud.html')
 
-def gallery_views(request: WSGIRequest):
 
+def gallery_views(request: WSGIRequest):
     return render(request, 'main/gallery.html')
+
 
 def user_login(request):
     if request.method == 'POST':
@@ -111,6 +120,7 @@ def home_work_views(request):
 from django.db.models import DateField
 from django.db.models.functions import Trunc
 
+
 @login_required
 def schedule_lessons_view(request):
     current_date = datetime.now()
@@ -128,6 +138,42 @@ def schedule_lessons_view(request):
 @login_required
 def parent_dashboard(request):
     parent = Parent.objects.get(user=request.user)
-    student = Student.objects.get(parent=parent)
+    student = parent.students.all()
+    student_grade = parent.students.first()
+    grades = Grades.objects.filter(student=student_grade)
+    return render(request, 'parent/parent_grade.html', {"student": student, "grades": grades})
 
-    return render(request, 'parent/parent_main.html', )
+
+@login_required
+def parent_message(request):
+    parent = Parent.objects.get(user=request.user)
+    student = parent.students.all()
+    parent_messages = Message.objects.filter(parent=parent)
+    return render(request, 'parent/parent_message.html', {"parent_messages": parent_messages, "student": student})
+
+
+@login_required
+def delete_message(request, message_id):
+    message = Message.objects.get(id=message_id)
+    message.delete()
+    return redirect('parent_message')
+
+
+@login_required
+def parent_home_work_views(request):
+    current_date = datetime.now()
+    parent = Parent.objects.get(user=request.user)
+    student = parent.students.get()
+    student_parent = parent.students.all()
+    homeworks = HomeWork.objects.filter(group=student.school_group, date_deadline__gte=current_date)
+    return render(request, 'parent/parent_homework.html', {"homeworks": homeworks, "student": student_parent,})
+
+
+@login_required
+def parent_schedule_views(request):
+    current_date = datetime.now()
+    parent = Parent.objects.get(user=request.user)
+    student = parent.students.get()
+    student_parent = parent.students.all()
+    exams = ScheduleExams.objects.filter(school_group=student.school_group, date__gte=current_date)
+    return render(request, 'parent/parent_schedule.html', {"exams": exams, "student": student_parent, })

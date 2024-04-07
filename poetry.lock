@@ -35,6 +35,20 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-appconf"
+version = "1.0.6"
+description = "A helper class for handling configuration defaults of packaged apps gracefully."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-appconf-1.0.6.tar.gz", hash = "sha256:cfe87ea827c4ee04b9a70fab90b86d704cb02f2981f89da8423cb0fabf88efbf"},
+    {file = "django_appconf-1.0.6-py3-none-any.whl", hash = "sha256:c3ae442fba1ff7ec830412c5184b17169a7a1e71cf0864a4c3f93cf4c98a1993"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-debug-toolbar"
 version = "4.3.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
@@ -48,6 +62,26 @@ files = [
 [package.dependencies]
 django = ">=3.2.4"
 sqlparse = ">=0.2"
+
+[[package]]
+name = "django-select2"
+version = "8.1.2"
+description = "This is a Django_ integration of Select2_."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_select2-8.1.2-py3-none-any.whl", hash = "sha256:dc09e09299988dd7cc1f31c27582976377f0e1479101be1f3bb0d1f24216477f"},
+    {file = "django_select2-8.1.2.tar.gz", hash = "sha256:f44685ee1c39090aade01e3ebc256702f05620f3c78a3c268440ad9a66070876"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+django-appconf = ">=0.6.0"
+
+[package.extras]
+docs = ["sphinx"]
+selenium = ["selenium"]
+test = ["pytest", "pytest-cov", "pytest-django", "selenium"]
 
 [[package]]
 name = "djangorestframework"
@@ -367,4 +401,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "01681a2c2465f90cb03cabfdcf63c240aba57861403176a2372bfac7f0933707"
+content-hash = "cabc4ba9a95d4636b4fd1f3c40d754b1c9982e72a7002f3242d93b98b56ececd"

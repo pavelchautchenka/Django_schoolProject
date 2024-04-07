@@ -55,7 +55,7 @@ class SchoolGroup(models.Model):
     student = models.ManyToManyField("Student", related_name="group_students")
     teacher = models.ManyToManyField("Teacher")
     subject = models.ManyToManyField("Subject")
-
+    #
     def __str__(self):
         return self.name
 
@@ -143,6 +143,18 @@ class Photo(models.Model):
 
     class Meta:
         db_table  = "photo"
+
+
+class Message(models.Model):
+    content = models.TextField(null=True)
+    parent = models.ForeignKey("Parent", on_delete=models.DO_NOTHING, null=True)
+
+    teacher = models.ForeignKey("Teacher", on_delete=models.DO_NOTHING, null=True)
+    date_creation = models.DateField(default=datetime.now())
+
+    class Meta:
+        db_table = "messages"
+
 
 
 

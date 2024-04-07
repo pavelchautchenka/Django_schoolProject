@@ -1,9 +1,10 @@
-{% extends "student/student_main.html" %}
+{% extends "parent/parent_main.html" %}
 
 {%  block content %}
     
     
-    <h1 align="center">Личный кабинет {{ user.first_name }}</h1>
+   <h1 align="center">Доброго дня, {{ user.first_name }} {{ user.last_name }}!</h1>
+    <h1 align="center">Ваш ученик: {{ student.first.user.first_name }} {{ student.first.user.last_name }}</h1>
 
     {% if exams %}
         <h2 align="center">Ваши предстоящие экзамены и контрольные:</h2>

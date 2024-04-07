@@ -1,0 +1,35 @@
+{% extends 'parent/parent_main.html' %}
+
+{% block content %}
+    <h1 align="center">Доброго дня, {{ user.first_name }} {{ user.last_name }}!</h1>
+    <h1 align="center">Ваш ученик: {{ student.first.user.first_name }} {{ student.first.user.last_name }}</h1>
+
+    {% if parent_messages %}
+        <h2 align="center">Ваши сообщения:</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Отправитель</th>
+                <th>Сообщение</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for message in parent_messages %}
+                <tr>
+                    <td>{{ message.date_creation|date:"d.m.Y" }}</td>
+                    <td>{{ message.teacher.user.first_name|add:" " |add:message.teacher.user.last_name }}</td>
+                    <td>{{ message.content }}</td>
+                    <td>
+                        <a href="{% url 'delete_message' message.id %}" class="btn btn-danger">Удалить</a>
+                    </td>
+                </tr>
+
+
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p align="center">Сообщения отсутствуют.</p>
+    {% endif %}
+{% endblock %}

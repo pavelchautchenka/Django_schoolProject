@@ -20,6 +20,11 @@ urlpatterns = [
                   path('logout/', views.logout_user, name='logout'),
 
                   path('parent_dashboard/', views.parent_dashboard, name='parent_dashboard'),
+                  path('parent_message/', views.parent_message, name='parent_message'),
+                  path('delete_message/<int:message_id>/', views.delete_message, name='delete_message'),
+                  path('parent_hm/', views.parent_home_work_views, name='parent_hw'),
+                  path('parent_schedule/', views.parent_schedule_views, name='parent_schedule'),
+
 
 
                   # path('diary/', views.teacher_dashboard, name='student_diary'),

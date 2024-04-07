@@ -7,14 +7,14 @@
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'schedule_lessons' %}">Расписание занятий на неделю</a>
+                            <a class="nav-link active" href="{% url 'parent_message' %}">Сообщения от учителя</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'schedule_exams' %}">Расписание контрольных и экзаменов</a>
+                            <a class="nav-link active" href="{% url 'parent_schedule' %}">Расписание контрольных и экзаменов</a>
                         </li>
                         <li class="nav-itemv">
-                            <a class="nav-link active " href={% url 'home_work' %}>Домашние задания</a>
+                            <a class="nav-link active " href={% url 'parent_hw' %}>Домашние задания студента</a>
                         </li>
 
                     </ul>
@@ -26,9 +26,14 @@
     </div>
 {% endblock %}
 
+
+<h1 align="center">Доброго дня  {{ user.first_name }} {{ user.last_name }} !</h1>
+    <h1 align="center">Ваш ученик: {{ student.first.user.first_name }} {{ student.first.user.last_name }}</h1>
+
+
+
+
 {% block content %}
-
-
-
+   
 
 {% endblock %}
