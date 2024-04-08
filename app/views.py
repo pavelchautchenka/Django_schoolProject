@@ -1,14 +1,15 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 from .forms import StudentRegisterForm, ParentRegisterForm, TeacherRegisterForm
-from app.models import Student, Teacher, Parent, Grades, ScheduleExams, ScheduleLessons, HomeWork, Message
+from app.models import Student, Teacher, Parent, Grades, Exam, Lessons, HomeWork, Message, Subject, SchoolGroup
 from app.models import News
 from app.services import send_activation_email
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.contrib import messages
 
 
 def home_page(request: WSGIRequest):
@@ -96,16 +97,16 @@ def logout_user(request):
 
 @login_required
 def student_dashboard(request):
-    students = Student.objects.get(user=request.user)
-    grades = Grades.objects.filter(student=students)
-    return render(request, 'student/diary_grade.html', {"grades": grades})
+    student = Student.objects.get(user=request.user)
+    grades = Grades.objects.filter(student=student)
+    return render(request, 'student/diary_grade.html', {"grades": grades, "student": student})
 
 
 @login_required
 def schedule_exams(request):
     student = Student.objects.get(user=request.user)
     current_date = datetime.now()
-    exams = ScheduleExams.objects.filter(school_group=student.school_group, date__gte=current_date)
+    exams = Exam.objects.filter(school_group=student.school_group)
     return render(request, 'student/exams.html', {"exams": exams})
 
 
@@ -117,37 +118,27 @@ def home_work_views(request):
     return render(request, 'student/homework_view.html', {"homeworks": homeworks})
 
 
-from django.db.models import DateField
-from django.db.models.functions import Trunc
-
 
 @login_required
 def schedule_lessons_view(request):
-    current_date = datetime.now()
     student = Student.objects.get(user=request.user)
-    lessons = ScheduleLessons.objects.filter(group=student.school_group, date__gte=current_date)
-    lessons = lessons.annotate(date_only=Trunc('date', 'day', output_field=DateField())).order_by('date_only')
-
-    lessons_by_date = {}
-    for lesson in lessons:
-        lessons_by_date.setdefault(lesson.date_only, []).append(lesson)
-
-    return render(request, 'student/schedule_lessons.html', {'lessons_by_date': lessons_by_date})
+    lessons = Lessons.objects.filter(group=student.school_group)
+    return render(request, 'student/schedule_lessons.html', {'lessons': lessons})
 
 
 @login_required
 def parent_dashboard(request):
     parent = Parent.objects.get(user=request.user)
-    student = parent.students.all()
-    student_grade = parent.students.first()
-    grades = Grades.objects.filter(student=student_grade)
+    student = Student.objects.filter(parent=parent).first()
+
+    grades = Grades.objects.filter(student=student)
     return render(request, 'parent/parent_grade.html', {"student": student, "grades": grades})
 
 
 @login_required
 def parent_message(request):
     parent = Parent.objects.get(user=request.user)
-    student = parent.students.all()
+    student = Student.objects.filter(parent=parent).first()
     parent_messages = Message.objects.filter(parent=parent)
     return render(request, 'parent/parent_message.html', {"parent_messages": parent_messages, "student": student})
 
@@ -163,17 +154,87 @@ def delete_message(request, message_id):
 def parent_home_work_views(request):
     current_date = datetime.now()
     parent = Parent.objects.get(user=request.user)
-    student = parent.students.get()
-    student_parent = parent.students.all()
+    student = Student.objects.filter(parent=parent).first()
+
     homeworks = HomeWork.objects.filter(group=student.school_group, date_deadline__gte=current_date)
-    return render(request, 'parent/parent_homework.html', {"homeworks": homeworks, "student": student_parent,})
+    return render(request, 'parent/parent_homework.html', {"homeworks": homeworks, "student": student})
 
 
 @login_required
 def parent_schedule_views(request):
     current_date = datetime.now()
     parent = Parent.objects.get(user=request.user)
-    student = parent.students.get()
-    student_parent = parent.students.all()
-    exams = ScheduleExams.objects.filter(school_group=student.school_group, date__gte=current_date)
-    return render(request, 'parent/parent_schedule.html', {"exams": exams, "student": student_parent, })
+    student = Student.objects.filter(parent=parent).first()
+
+
+    exams = Exam.objects.filter( date__gte=current_date,school_group=student.school_group)
+    return render(request, 'parent/parent_schedule.html', {"exams": exams, "student": student, })
+
+
+@login_required
+def teacher_dashboard(request):
+    return render(request,'teacher/teacher_main.html',{"user": request.user})
+
+@login_required
+def teacher_send_message(request):
+    if request.method == 'POST':
+        parent_id = request.POST.get('parent')
+        message_text = request.POST.get('message')
+        parent = Parent.objects.get(id=parent_id)
+        Message.objects.create(
+            content=message_text,
+            date_creation=datetime.now(),
+            parent=parent,
+            teacher=Teacher.objects.get(user=request.user)
+        )
+        messages.success(request, "Ваше сообщение отправлено")
+        return redirect('teacher_dashboard',)
+
+    parents = Parent.objects.all()
+    return render(request, 'teacher/teacher_send_message.html', {'parents': parents})
+
+@login_required
+def teacher_post_grade(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('student')
+        grade_value = request.POST.get('grade')
+        student = Student.objects.get(id=student_id)
+
+        # Создаем и сохраняем оценку
+        Grades.objects.create(
+            student=student,
+            grade=grade_value,
+            # Указываем учителя, выставляющего оценку
+            teacher=request.user.teacher_profile
+        )
+
+        # Перенаправление после отправки формы
+        return redirect('teacher_post_grade')
+
+        # Для GET запроса предоставляем список учеников
+    students = Student.objects.all()
+    return render(request, 'teacher/teacher_post_grades.html', {'students': students})
+
+@login_required
+def teacher_create_hw(request):
+    if request.method == 'POST':
+        subject_id = request.POST.get('subject')
+        description = request.POST.get('description')
+        date_deadline = request.POST.get('date_deadline')
+        subject = Subject.objects.get(id=subject_id)
+        school_group = SchoolGroup.objects.all()
+
+        HomeWork.objects.create(
+            subject=subject,
+            description=description,
+
+            date_deadline= date_deadline,
+            group = school_group[0]
+        )
+
+        return redirect('some_view')
+
+    subjects = Subject.objects.all()
+    return render(request, 'teacher/teacher_create_homework.html', {'subjects': subjects})
+
+# TODO: доделать тут список групп при выдачи ДЗ

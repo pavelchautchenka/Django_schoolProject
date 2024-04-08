@@ -25,9 +25,11 @@ urlpatterns = [
                   path('parent_hm/', views.parent_home_work_views, name='parent_hw'),
                   path('parent_schedule/', views.parent_schedule_views, name='parent_schedule'),
 
+                  path('teacher_dashboar/', views.teacher_dashboard, name='teacher_dashboard'),
+                  path('teacher_send/', views.teacher_send_message, name='teacher_send_message'),
+                  path('teacher_post_grade/', views.teacher_post_grade,name='teacher_post_grade'),
+                  path('teacher_post_hw/', views.teacher_create_hw, name='teacher_post_homework'),
 
-
-                  # path('diary/', views.teacher_dashboard, name='student_diary'),
 
 
                   path('diary/', views.student_dashboard, name='student_diary'),

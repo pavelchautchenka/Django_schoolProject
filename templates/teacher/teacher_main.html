@@ -1,19 +1,33 @@
 {% extends "main/base.html" %}
 
+
+
+<h1 align="center">Доброго дня {{ user.first_name }} {{ user.last_name }} !</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 {% block sidebar %}
+    <h1 align="center">Доброго дня {{ user.first_name }} {{ user.last_name }} !</h1>
     <div class="container-fluid">
         <div class="row">
             <nav class="sidebar col-lg-2 d-md-block custom-sidebar">
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="">Отправить сообщения родителям </a>
+                            <a class="nav-link active" href="{% url 'teacher_send_message' %}">Отправить сообщения
+                                родителям </a>
                         </li>
                         <li class="nav-itemv">
-                            <a class="nav-link active " href=>Выставление оценок</a>
+                            <a class="nav-link active " href="{% url 'teacher_post_grade'  %}">Выставление оценок</a>
                         </li>
                         <li class="nav-itemv">
-                            <a class="nav-link active " href=>Создание домашнего задания</a>
+                            <a class="nav-link active " href="{% url 'teacher_post_homework'  %}">Создание домашнего задания</a>
                         </li>
 
                     </ul>
@@ -24,12 +38,6 @@
         </div>
     </div>
 {% endblock %}
-
-
-<h1 align="center">Доброго дня {{ user.first_name }} {{ user.last_name }} !</h1>
-
-
-
 
 
 {% block content %}

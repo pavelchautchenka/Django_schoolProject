@@ -5,6 +5,7 @@
  {% block content %}
    
     <h1 align="center">Личный кабинет {{ user.first_name }}</h1>
+     <h1 align="center">Номер группы: {{ student.school_group.number }} </h1>
 
     {% if grades %}
         <h2 align="center">Ваши оценки:</h2>

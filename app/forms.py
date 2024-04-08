@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import User, Student, Parent, Teacher, SchoolGroup
+from .models import User, Student, Parent, Teacher, SchoolGroup, Subject
 from django_select2.forms import Select2MultipleWidget
 
 
@@ -35,7 +35,7 @@ class ParentRegisterForm(UserCreationForm):
 
 
 class TeacherRegisterForm(UserCreationForm):
-    prof_of_subject = forms.CharField(max_length=100, required=False)
+    prof_of_subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), required=False, widget=forms.SelectMultiple)
 
     class Meta(UserCreationForm.Meta):
         model = User

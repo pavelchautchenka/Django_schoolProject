@@ -1,0 +1,28 @@
+
+{% extends 'teacher/teacher_main.html' %}
+
+{% block content %}
+    <div class="container mt-3">
+        <h2 align="center">Создание домашнего задания</h2>
+        <form method="POST" action="{% url 'teacher_post_homework' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="subjectSelect" class="form-label">Предмет</label>
+                <select class="form-select" id="subjectSelect" name="subject">
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="homeworkDescription" class="form-label">Описание задания</label>
+                <textarea class="form-control" id="homeworkDescription" name="description" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="homeworkDeadline" class="form-label">Сделать До:</label>
+                <input type="date" class="form-control" id="homeworkDeadline" name="date_deadline">
+            </div>
+            <button type="submit" class="btn btn-primary">Создать задание</button>
+        </form>
+    </div>
+{% endblock %}

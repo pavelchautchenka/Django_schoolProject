@@ -1,33 +1,34 @@
 {% extends "student/student_main.html" %}
 
-{%  block content %}
-    
-    
+{% block content %}
+
+
     <h1 align="center">Личный кабинет {{ user.first_name }}</h1>
 
     {% if exams %}
         <h2 align="center">Ваши предстоящие экзамены и контрольные:</h2>
         <table class="table">
             <thead>
-                <tr>
-                    <th>Предмет</th>
-                    <th>Дата</th>
-                    <th>Учитель</th>
-                    
-                </tr>
+            <tr>
+                <th>Предмет</th>
+                <th>Тема экзамена</th>
+                <th>Дата</th>
+                <th>Учитель</th>
+
+            </tr>
             </thead>
             <tbody>
-                {% for exam in exams %}
-                    <tr>
-                        <td>{{ exam.subject.name }}</td>
-                        <td>{{ exam.date }}</td>
-                        <td>
-                            {% for teacher in exam.teacher.all %}
-                                {{ teacher.user.first_name }} {{ teacher.user.last_name }}<br>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                {% endfor %}
+            {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.teacher.my_subject }}</td>
+                    <td>{{ exam.name }}</td>
+                    <td>{{ exam.date }}</td>
+                    <td>{{ exam.teacher.user.first_name }} {{ exam.teacher.user.last_name }}
+                        <br>
+
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     {% else %}

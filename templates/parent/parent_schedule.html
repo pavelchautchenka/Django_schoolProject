@@ -4,7 +4,7 @@
     
     
    <h1 align="center">Доброго дня, {{ user.first_name }} {{ user.last_name }}!</h1>
-    <h1 align="center">Ваш ученик: {{ student.first.user.first_name }} {{ student.first.user.last_name }}</h1>
+    <h1 align="center">Ваш ученик: {{ student.user.first_name }} {{ student.user.last_name }}</h1>
 
     {% if exams %}
         <h2 align="center">Ваши предстоящие экзамены и контрольные:</h2>
@@ -20,12 +20,10 @@
             <tbody>
                 {% for exam in exams %}
                     <tr>
-                        <td>{{ exam.subject.name }}</td>
+                        <td>{{ exam.name }}</td>
                         <td>{{ exam.date }}</td>
-                        <td>
-                            {% for teacher in exam.teacher.all %}
-                                {{ teacher.user.first_name }} {{ teacher.user.last_name }}<br>
-                            {% endfor %}
+                        <td>{{ exam.teacher.user.first_name }} {{ exam.teacher.user.last_name }}
+                            
                         </td>
                     </tr>
                 {% endfor %}

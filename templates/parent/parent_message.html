@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1 align="center">Доброго дня, {{ user.first_name }} {{ user.last_name }}!</h1>
-    <h1 align="center">Ваш ученик: {{ student.first.user.first_name }} {{ student.first.user.last_name }}</h1>
+    <h1 align="center">Ваш ученик: {{ student.user.first_name }} {{ student.user.last_name }}</h1>
 
     {% if parent_messages %}
         <h2 align="center">Ваши сообщения:</h2>

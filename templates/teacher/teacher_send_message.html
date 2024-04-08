@@ -1,0 +1,27 @@
+{% extends 'teacher/teacher_main.html' %}
+
+{% block content %}
+   <div class="container mt-3">
+        <h2 align="center">Отправить сообщения родителям</h2>
+        <form method="POST" action="{% url 'teacher_send_message' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="parentSelect" class="form-label">Выберите родителя</label>
+                <select class="form-select" id="parentSelect" name="parent">
+                   
+                    {% for parent in parents %}
+                        <option value="{{ parent.id }}">{{ parent.user.first_name }} {{ parent.user.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="messageText" class="form-label">Сообщение</label>
+                <textarea class="form-control" id="messageText" name="message" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+    </div>
+    
+    
+
+{% endblock %}

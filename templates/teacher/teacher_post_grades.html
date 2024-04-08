@@ -1,0 +1,23 @@
+{% extends 'teacher/teacher_main.html' %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2 align="center">Выставление оценок</h2>
+    <form method="POST" action="{% url 'teacher_post_grade' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="studentSelect" class="form-label">Выберите ученика</label>
+            <select class="form-select" id="studentSelect" name="student">
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.user.first_name }} {{ student.user.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="gradeInput" class="form-label">Оценка</label>
+            <input type="number" class="form-control" id="gradeInput" name="grade" min="1" max="5">
+        </div>
+        <button type="submit" class="btn btn-primary">Выставить оценку</button>
+    </form>
+</div>
+{% endblock %}

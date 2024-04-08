@@ -1,35 +1,34 @@
 {% extends "student/student_main.html" %}
 
 {% block content %}
-    <h1 align="center">Личный кабинет {{ user.first_name }}</h1>
+<h1 align="center">Личный кабинет {{ user.first_name }}</h1>
 
-    {% for date, lessons_on_date in lessons_by_date.items %}
-        <h2 align="center">{{ date }}: Ваши занятия</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Предмет</th>
-                    <th>Описание</th>
-                    <th>Дата / Время</th>
-                    <td>Учитель</td>
-                </tr>
-            </thead>
-            <tbody>
-                {% for lesson in lessons_on_date %}
-                    {% for teacher in lesson.teacher.all %}
-                        <tr>
-                            <td>{{ lesson.subject.name }}</td>
-                            <td>{{ lesson.description }}</td>
-                            <td>{{ lesson.date }}</td>
-                            <td>{{ teacher.user.first_name }} {{ teacher.user.last_name }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endfor %}
-            </tbody>
-        </table>
-        {% if not forloop.last %}
-            <hr> <!-- Разделитель между датами -->
-        {% endif %}
-    {% endfor %}
+{% if lessons %}
+    <h2 align="center">{{ date }}: Ваши занятия</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Предмет</th>
+            <th>Описание</th>
+            <th>Дата / Время</th>
+            
+        </tr>
+        </thead>
+        <tbody>
+
+{% for lesson in lessons %}
+        <tr>
+            <td>{{ lesson.subject.name }}</td>
+            <td>{{ lesson.description }}</td>
+            <td>{{ lesson.date }}</td>
+            
+        </tr>
+
+{% endfor %}
+        </tbody>
+    </table>
+    
+{% endif %}
+
 
 {% endblock %}
