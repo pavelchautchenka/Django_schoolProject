@@ -95,7 +95,7 @@ def create_teachers(n):
 
         teacher = Teacher.objects.create(
             user=teacher_user,
-            my_subject=random.choice(subjects)  # Присвоение учителю случайного предмета
+            my_subject=random.choice(subjects)
         )
 
 
@@ -120,7 +120,7 @@ def create_fake_grades():
     teachers = Teacher.objects.all()
 
     for student in students:
-        for _ in range(10):  # Создаем 10 оценок на каждого студента
+        for _ in range(10):
             grade = Grades(
                 student=student,
                 subject=random.choice(subjects),
@@ -156,7 +156,7 @@ def create_homeworks():
             date_creation=fake.date(),
             date_deadline=fake.date_between(start_date="today", end_date="+30d")
         )
-        # Выбираем случайные группы и добавляем их к домашнему заданию
+
         selected_groups = random.sample(list(school_groups), k=random.randint(1, len(school_groups)))
         homework.group.set(selected_groups)
 
@@ -192,6 +192,6 @@ if __name__ == '__main__':
     #
      #create_exams()
     #
-     create_schedule_lessons()
+    # create_schedule_lessons()
 
 

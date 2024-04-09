@@ -17,6 +17,8 @@ djangorestframework-simplejwt = "^5.3.1"
 pillow = "^10.3.0"
 django-select2 = "^8.1.2"
 django-redis = "^5.4.0"
+redis = "^5.0.3"
+celery = "^5.3.6"
 
 
 [build-system]

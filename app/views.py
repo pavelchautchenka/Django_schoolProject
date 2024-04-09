@@ -2,7 +2,6 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
-
 from .forms import StudentRegisterForm, ParentRegisterForm, TeacherRegisterForm
 from app.models import User, Student, Teacher, Parent, Grades, Exam, Lessons, HomeWork, Message, Subject, SchoolGroup
 from app.models import News
@@ -27,7 +26,7 @@ def home_page(request: WSGIRequest):
     return render(request, 'main/main.html', {"news": queryset})
 
 
-def search(request):
+def search(request: WSGIRequest):
     query = request.GET.get('query', '')
     if query:
         results = News.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
@@ -82,7 +81,7 @@ def confirm_new_password_view(request: WSGIRequest, uidb64, token):
     return render(request, "user/password/confirme_new_password.html", {'uidb64': uidb64, 'token': token})
 
 
-def register_user(request, user_type):
+def register_user(request: WSGIRequest, user_type):
     form_classes = {
         'student': StudentRegisterForm,
         'parent': ParentRegisterForm,
@@ -106,8 +105,8 @@ def register_user(request, user_type):
             elif user_type == 'parent':
                 parent = model_classes[user_type].objects.create(user=user)
                 for student in form.cleaned_data.get('students', []):
-                    parent.students.add(student)
-                    student.parents.add(parent)
+
+                    student.parent = parent
                     student.save()
             else:
                 model_classes[user_type].objects.create(user=user)
@@ -131,7 +130,7 @@ def gallery_views(request: WSGIRequest):
     return render(request, 'main/gallery.html')
 
 
-def user_login(request):
+def user_login(request: WSGIRequest):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -160,21 +159,24 @@ def logout_user(request):
 
 
 @login_required
-def student_dashboard(request):
+@cache_page(60 * 15)
+def student_dashboard(request: WSGIRequest):
     student = Student.objects.select_related('school_group').get(user=request.user)
     grades = Grades.objects.filter(student=student).select_related('subject', 'teacher')
     return render(request, 'student/diary_grade.html', {"grades": grades, "student": student})
 
 
 @login_required
-def student_schedule_exams(request):
+@cache_page(60 * 15)
+def student_schedule_exams(request: WSGIRequest):
     student = Student.objects.only('school_group').get(user=request.user)
-    #current_date = timezone.now()
+    # current_date = timezone.now()
     exams = Exam.objects.filter(school_group=student.school_group)
     return render(request, 'student/exams.html', {"exams": exams})
 
 
 @login_required
+@cache_page(60 * 15)
 def student_home_work_views(request):
     current_date = datetime.now()
     student = Student.objects.select_related('school_group').get(user=request.user)
@@ -184,23 +186,25 @@ def student_home_work_views(request):
 
 
 @login_required
-def student_schedule_lessons_view(request):
+@cache_page(60 * 15)
+def student_schedule_lessons_view(request: WSGIRequest):
     student = Student.objects.select_related('school_group').get(user=request.user)
     lessons = Lessons.objects.filter(group=student.school_group)
     return render(request, 'student/schedule_lessons.html', {'lessons': lessons})
 
 
 @login_required
-def parent_dashboard(request):
+@cache_page(60 * 15)
+def parent_dashboard(request: WSGIRequest):
     parent = Parent.objects.get(user=request.user)
     student = Student.objects.get(parent=parent)
     grades = Grades.objects.filter(student=student).select_related('subject', 'teacher')
     return render(request, 'parent/parent_grade.html', {"student": student, "grades": grades})
 
 
-
 @login_required
-def parent_message(request):
+@cache_page(60 * 15)
+def parent_message(request: WSGIRequest):
     parent = Parent.objects.select_related('user').get(user=request.user)
     student = Student.objects.filter(parent=parent).first()
     parent_messages = Message.objects.filter(parent=parent)
@@ -208,14 +212,16 @@ def parent_message(request):
 
 
 @login_required
-def delete_message(request, message_id):
+@cache_page(60 * 15)
+def delete_message(request: WSGIRequest, message_id):
     message = Message.objects.get(id=message_id)
     message.delete()
     return redirect('parent_message')
 
 
 @login_required
-def parent_home_work_views(request):
+@cache_page(60 * 15)
+def parent_home_work_views(request: WSGIRequest):
     current_date = datetime.now()
     parent = Parent.objects.select_related('user').get(user=request.user)
     student = Student.objects.filter(parent=parent).prefetch_related('school_group').first()
@@ -224,9 +230,9 @@ def parent_home_work_views(request):
     return render(request, 'parent/parent_homework.html', {"homeworks": homeworks, "student": student})
 
 
-
 @login_required
-def parent_schedule_views(request):
+@cache_page(60 * 15)
+def parent_schedule_views(request: WSGIRequest):
     current_date = datetime.now()
     parent = Parent.objects.select_related('user').get(user=request.user)
     student = Student.objects.filter(parent=parent).prefetch_related('school_group').first()
@@ -235,9 +241,9 @@ def parent_schedule_views(request):
     return render(request, 'parent/parent_schedule.html', {"exams": exams, "student": student})
 
 
-
 @login_required
-def teacher_dashboard(request):
+@cache_page(60 * 15)
+def teacher_dashboard(request: WSGIRequest):
     current_date = timezone.now()
     end_date = current_date + timedelta(days=7)
     teacher = Teacher.objects.select_related("user").get(user=request.user)
@@ -249,10 +255,9 @@ def teacher_dashboard(request):
     return render(request, 'teacher/teacher_my_schedule.html', {"user": request.user, "lessons": lessons})
 
 
-
 @login_required
-@cache_page(60 * 15)
-def teacher_send_message(request):
+#@cache_page(60 * 15)
+def teacher_send_message(request: WSGIRequest):
     if request.method == 'POST':
         parent_id = request.POST.get('parent')
         message_text = request.POST.get('message')
@@ -272,11 +277,12 @@ def teacher_send_message(request):
 
 
 @login_required
-def teacher_post_grade(request):
+@cache_page(60 * 15)
+def teacher_post_grade(request: WSGIRequest):
     if request.method == 'POST':
         student_id = request.POST.get('student')
         grade_value = request.POST.get('grade')
-        student = Student.objects.select_related('school_group','user').get(id=student_id)
+        student = Student.objects.select_related('school_group', 'user').get(id=student_id)
         Grades.objects.create(
             student=student,
             grade=grade_value,
@@ -284,12 +290,13 @@ def teacher_post_grade(request):
         )
         return redirect('teacher_post_grade')
 
-    students = Student.objects.select_related('school_group','user').all()
+    students = Student.objects.select_related('school_group', 'user').all()
     return render(request, 'teacher/teacher_post_grades.html', {'students': students})
 
 
 @login_required
-def teacher_create_hw(request):
+@cache_page(60 * 15)
+def teacher_create_hw(request: WSGIRequest):
     if request.method == 'POST':
         description = request.POST.get('description')
         date_deadline = request.POST.get('date_deadline')

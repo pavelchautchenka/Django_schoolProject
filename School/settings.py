@@ -1,3 +1,5 @@
+from datetime import timedelta
+from celery.schedules import crontab
 from pathlib import Path
 from datetime import timedelta
 
@@ -23,6 +25,8 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
 AUTH_USER_MODEL = 'app.User'
 
+
+
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -43,7 +47,9 @@ INSTALLED_APPS = [
     'app.apps.AppConfig',
     'debug_toolbar',
     "rest_framework",
-    "rest_framework_simplejwt"
+    "rest_framework_simplejwt",
+
+
 ]
 
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -164,3 +170,16 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BEAT_SCHEDULE = {
+
+    'send-reminders-every-hour': {
+        'task': 'Event.tasks.send_email_reminders',
+        'schedule': crontab(minute="0"),  # запускать каждый час в начале часа
+    },
+}
