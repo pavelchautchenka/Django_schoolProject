@@ -62,6 +62,9 @@ class Teacher(models.Model):
 class SchoolGroup(models.Model):
     number = models.IntegerField(null=False, blank=True)
 
+    def __str__(self):
+        return str(self.number)
+
 
     class Meta:
         db_table = 'school_groups'

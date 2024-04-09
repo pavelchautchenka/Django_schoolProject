@@ -16,6 +16,8 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label for="parentSelect" class="form-label">Выберите родителя</label>
+            
+            
                 <select class="form-select" id="parentSelect" name="parent">
 
                     {% for parent in parents %}

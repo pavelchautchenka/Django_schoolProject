@@ -1,0 +1,21 @@
+{%  extends 'main/base.html' %}
+
+{% block content %}
+
+    <h2>Результаты поиска</h2>
+    <div class="container">
+    {% for item in results %}
+           <div class="dark-card">
+           <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text">{{ item.description }}</p>
+                    <p class="card-text"><small class="text-muted">{{ item.date }}</small></p>
+                </div>
+        </div>
+            
+    {% empty %}
+        <p>Ничего не найдено.</p>
+    {% endfor %}
+    </div>
+    
+{% endblock %}

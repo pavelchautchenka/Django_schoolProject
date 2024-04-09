@@ -65,7 +65,7 @@ class ConfirmUserRegisterEmailSender(BaseEmailSender):
 
 
 class ConfirmUserResetPasswordEmailSender(BaseEmailSender):
-    template_name = "password/password_reset_request.html"
+    template_name = "user/password/password_reset_request.html"
     user_id_field = "username"
     subject = "Сброс пароля"
 # ===================================================
@@ -88,8 +88,8 @@ class BaseEmailSender:
         mail.send()
 
 # Использование класса
-email_sender = BaseEmailSender(request, user)
-email_sender.send_mail("registration/email_confirm.html", "Подтвердите регистрацию")
-email_sender.send_mail("password/password_reset_request.html", "Сброс пароля")
+# email_sender = BaseEmailSender(request, user)
+# email_sender.send_mail("registration/email_confirm.html", "Подтвердите регистрацию")
+# email_sender.send_mail("password/password_reset_request.html", "Сброс пароля")
 
 # ===================================================

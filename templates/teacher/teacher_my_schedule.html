@@ -6,7 +6,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Дата</th>                    
+                    <th>N </th>                    
                     <th>Время</th>
                     <th>Группа</th>
                     
@@ -16,7 +16,7 @@
                 {% for lesson in lessons %}
                     <tr>
                         
-                        <td>{{ lesson.subject }}</td>
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ lesson.date }}</td>
                         <td>{{ lesson.group.number }}</td>
                         

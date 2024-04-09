@@ -56,9 +56,9 @@
 
                 {% endif %}
                 <li class="nav-item ">
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="поиск" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    <form class="d-flex" role="search" action="{% url 'search_results' %}" method="get">
+                        <input class="form-control me-2" type="search" name="query" placeholder="поиск в новостях " aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Поиск </button>
                     </form>
                 </li>
 
