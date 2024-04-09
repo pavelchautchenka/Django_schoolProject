@@ -1,0 +1,28 @@
+{% extends "teacher/teacher_main.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Ваше расписание на неделю:</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Дата</th>                    
+                    <th>Время</th>
+                    <th>Группа</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for lesson in lessons %}
+                    <tr>
+                        
+                        <td>{{ lesson.subject }}</td>
+                        <td>{{ lesson.date }}</td>
+                        <td>{{ lesson.group.number }}</td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

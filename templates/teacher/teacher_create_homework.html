@@ -2,15 +2,22 @@
 {% extends 'teacher/teacher_main.html' %}
 
 {% block content %}
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
     <div class="container mt-3">
         <h2 align="center">Создание домашнего задания</h2>
         <form method="POST" action="{% url 'teacher_post_homework' %}">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="subjectSelect" class="form-label">Предмет</label>
-                <select class="form-select" id="subjectSelect" name="subject">
-                    {% for subject in subjects %}
-                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                <label for="subjectSelect" class="form-label">Группа</label>
+                <select class="form-select" id="subjectSelect" name="school_group">
+                    {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.number }}</option>
                     {% endfor %}
                 </select>
             </div>
