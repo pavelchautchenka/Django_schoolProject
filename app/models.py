@@ -121,10 +121,10 @@ class Exam(models.Model):
 
 
 class Lessons(models.Model):
-    subject = models.ForeignKey("Subject", on_delete=models.DO_NOTHING, null=True)
+    subject = models.ForeignKey("Subject", on_delete=models.DO_NOTHING, null=True, related_name="lessons")
     description = models.TextField(null=True)
     date = models.DateTimeField(default=None)
-    group = models.ForeignKey("SchoolGroup", on_delete=models.DO_NOTHING, null=True)
+    group = models.ForeignKey("SchoolGroup", on_delete=models.DO_NOTHING, null=True,related_name="lessons")
 
     class Meta:
         db_table = 'lessons'
@@ -133,10 +133,10 @@ class Lessons(models.Model):
 class HomeWork(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING)
     description = models.TextField()
-    teacher = models.ForeignKey("Teacher", on_delete=models.DO_NOTHING, null=True)
+    teacher = models.ForeignKey("Teacher", on_delete=models.DO_NOTHING, null=True,related_name="homeworks")
     date_creation = models.DateField(default=timezone.now)
     date_deadline = models.DateField(default=None)
-    group = models.ManyToManyField(SchoolGroup)
+    group = models.ManyToManyField(SchoolGroup, related_name="homeworks")
 
     class Meta:
         db_table = 'homeworks'
@@ -155,8 +155,8 @@ class Photo(models.Model):
 
 class Message(models.Model):
     content = models.TextField(null=True)
-    parent = models.ForeignKey("Parent", on_delete=models.DO_NOTHING, null=True)
-    teacher = models.ForeignKey("Teacher", on_delete=models.DO_NOTHING, null=True)
+    parent = models.ForeignKey("Parent", on_delete=models.DO_NOTHING, null=True, related_name="messages")
+    teacher = models.ForeignKey("Teacher", on_delete=models.DO_NOTHING, null=True,related_name="messages")
     date_creation = models.DateField(default=timezone.now)
 
     class Meta:

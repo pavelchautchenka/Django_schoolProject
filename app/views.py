@@ -256,7 +256,7 @@ def teacher_dashboard(request: WSGIRequest):
 
 
 @login_required
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def teacher_send_message(request: WSGIRequest):
     if request.method == 'POST':
         parent_id = request.POST.get('parent')
