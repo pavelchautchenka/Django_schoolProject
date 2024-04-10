@@ -1,37 +1,66 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from hwork.models import Note, User, Tag
+from app.models import News, Student, Parent, Teacher, Grades, Exam, HomeWork, Lessons, Message
 
 
-class UserSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model()
-        fields = ['id', 'username']
+        model = Lessons
+        fields = ['subject', 'description', 'date', 'group']
 
 
-class NoteSerializer(serializers.ModelSerializer):
+class HomeWorkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomeWork
+        fields = ['subject', 'description', 'date_creation', 'date_deadline', 'group']
 
-    tags = serializers.ListField(child=serializers.CharField(), write_only=True)
-    user = UserSerializer(read_only=True)
 
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ['title', 'description', 'date']
+
+
+class ExamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = ['name', 'date', 'description', 'teacher', 'school_group']
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = ("user", "my_subject")
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+
+class GradeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Grades
+        fields = ['grade', 'subject', 'teacher']
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    grades = GradeSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Note
-        fields = ['uuid', 'title', "content", 'created_at', "user", "image", "tags"]
-        write_only_fields = ["content", 'title', "image", "tags"]
-
-    def create(self, validated_data):
-        tags_data = validated_data.pop('tags', [])
-        note = Note.objects.create(**validated_data)
-
-        for tag_name in tags_data:
-            tag, created = Tag.objects.get_or_create(name=tag_name)
-            note.tags.add(tag)
-
-        return note
+        model = Student
+        fields = ['id', 'user', 'school_group', 'grades']
 
 
-class TagSerializer(serializers.ModelSerializer):
+class ParentSerializer(serializers.ModelSerializer):
+    student = StudentSerializer(read_only=True)
+
     class Meta:
-        model = Tag
-        fields = ['id', 'name']
+        model = Parent
+        fields = ("id", "user", 'student')
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['content', 'parent', 'teacher', 'date_creation']
