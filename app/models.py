@@ -26,7 +26,7 @@ class User(AbstractUser):
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile', null=True, blank=True)
     parent = models.OneToOneField('Parent', on_delete=models.SET_NULL, null=True, blank=True, related_name="children")
-    school_group = models.ForeignKey('SchoolGroup', on_delete=models.DO_NOTHING, null=False, blank=True,
+    school_group = models.ForeignKey('SchoolGroup', on_delete=models.CASCADE, null=False, blank=True,
                                      related_name="students")
 
     def __str__(self):
@@ -102,7 +102,7 @@ class Grades(models.Model):
         db_table = 'grades'
 
     def __str__(self):
-        return self.grade
+        return str(self.grade)
 
 
 class Exam(models.Model):
@@ -111,7 +111,7 @@ class Exam(models.Model):
     description = models.TextField()
     teacher = models.ForeignKey(Teacher, related_name="exams", on_delete=models.DO_NOTHING
                                 , null=True,blank=True)
-    school_group = models.ForeignKey(SchoolGroup, related_name="exams", on_delete=models.DO_NOTHING)
+    school_group = models.ForeignKey(SchoolGroup, related_name="exams", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
