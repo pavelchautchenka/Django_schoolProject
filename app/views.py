@@ -242,7 +242,7 @@ def parent_schedule_views(request: WSGIRequest):
 
 
 @login_required
-@cache_page(60 * 15)
+
 def teacher_dashboard(request: WSGIRequest):
     current_date = timezone.now()
     end_date = current_date + timedelta(days=7)

@@ -1,0 +1,9 @@
+.venv
+!app
+!School
+!templates
+!test
+!manage.py
+!poetry.lock
+!pyproject.toml
+!run.sh

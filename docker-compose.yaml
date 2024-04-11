@@ -1,0 +1,89 @@
+version: '3.10'
+
+services:
+  http-balancer:
+    image: nginx:1.25-alpine
+    ports:
+    - "80:80"
+    volumes:
+      - "./staticfiels:/var/www/static"
+      - "./compose/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+    depends_on:
+      - backend
+
+
+  db:
+    image: postgres:16.2
+    restart: always
+    environment:
+      POSTGRES_DB: school
+      POSTGRES_USER: django_pavel
+      POSTGRES_PASSWORD: password
+
+  pgadmin:
+    image: elestio/pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mail.com
+      PGADMIN_DEFAULT_PASSWORD: admin_password
+      PGADMIN_LISTEN_PORT: 8080
+    ports:
+      - "8080:8080"
+
+  cache:
+    restart: always
+    image: redis:7.2.4-alpine
+
+  backend:
+    image: school:0.1
+    restart: always
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      DJANGO_SUPERUSER_EMAIL: admin@example.com
+      DJANGO_SUPERUSER_USERNAME: papa
+      DJANGO_SUPERUSER_PASSWORD: 123
+
+    env_file:
+      - compose/.compose.env
+    depends_on:
+      - db
+      - broker
+      - cache
+
+    volumes:
+      - "./static:/School/static"
+      - "./app:/School/app"
+      - "./School:/School/School"
+      - "./templates:/School/templates"
+
+  celery-worker:
+    image: app:0.1
+    build: .
+    restart: always
+    command: celery -A School worker -c 2 -l INFO -n celery_worker_1 -Q celery
+    env_file:
+      - compose/.compose.env
+    depends_on:
+      - db
+      - broker
+      - cache
+      - celery-backend
+
+
+
+  celery-backend:
+    restart: always
+    image: redis:7.2.4-alpine
+
+  broker:
+    image: rabbitmq:3.13.0-management
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit_user
+      RABBITMQ_DEFAULT_PASS: rabbit_password
+      RABBITMQ_DEFAULT_VHOST: app
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: -rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
+
+    ports:
+      - "15672:15672"

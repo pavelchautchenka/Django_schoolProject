@@ -90,3 +90,13 @@
 .message p {
     margin-top: 10px;
 }
+
+
+.text-white{
+    color: #d1d1d1;
+}
+
+.bg-secondary{
+    background-color: gray!important;
+}
+

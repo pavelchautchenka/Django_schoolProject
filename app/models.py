@@ -60,7 +60,7 @@ class Teacher(models.Model):
 
 
 class SchoolGroup(models.Model):
-    number = models.IntegerField(null=False, blank=True)
+    number = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return str(self.number)

@@ -25,16 +25,19 @@
                     </li>
                     {% if user.student_profile %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'student_diary' %}">Мой кабинет </a>
+                            <a class="nav-link" href="{% url 'student_diary' %}">Мой Дневник </a>
                         </li>
+                       
                     {% elif user.parent_profile %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'parent_dashboard' %}">Родительский кабинет</a>
                         </li>
+                        
                     {% elif user.teacher_profile %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'teacher_dashboard' %}">Учительский кабинет </a>
                         </li>
+                       
                     {% endif %}
                 
                 {% else %}

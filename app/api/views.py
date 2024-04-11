@@ -7,10 +7,11 @@ from rest_framework.exceptions import AuthenticationFailed, NotFound
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveAPIView, CreateAPIView, GenericAPIView, DestroyAPIView
-from app.models import News, Student, Parent, Teacher, Exam, HomeWork, Lessons, Message
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveAPIView, CreateAPIView, GenericAPIView, \
+    DestroyAPIView
+from app.models import News, Student, Parent, Teacher, Exam, HomeWork, Lessons, Message, Grades
 from .serializers import NewsSerializer, StudentSerializer, ParentSerializer, TeacherSerializer, LoginSerializer, \
-    ExamSerializer, HomeWorkSerializer, LessonSerializer,MessageSerializer
+    ExamSerializer, HomeWorkSerializer, LessonSerializer, MessageSerializer,GradeSerializer
 
 
 class NewsListAPIView(ListAPIView):
@@ -173,7 +174,6 @@ class ParentHomeWorkAPIView(ListAPIView):
             raise NotFound('Родитель или студент не найден')
 
 
-
 class ParentScheduleAPIView(ListAPIView):
     serializer_class = ExamSerializer
 
@@ -206,3 +206,40 @@ class TeacherDashboardAPIView(ListAPIView):
             return Lessons.objects.filter(subject=teacher.my_subject, date__gte=current_date, date__lte=end_date)
         except Teacher.DoesNotExist:
             raise NotFound('Учитель не найден')
+
+
+class TeacherSendMessageAPIView(ListAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post_message(self, serializer):
+        parent_id = self.request.data.get('parent')
+        parent = Parent.objects.get(id=parent_id)
+        teacher = Teacher.objects.get(user=self.request.user)
+        serializer.save(subject=teacher.my_subject, parent=parent, teacher=teacher, date_creation=timezone.now())
+
+
+class TeacherPostGradeAPIView(CreateAPIView):
+    queryset = Grades.objects.all()
+    serializer_class = GradeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def grade_create(self, serializer):
+        student_id = self.request.data.get('student')
+        student = Student.objects.get(id=student_id)
+        teacher = Teacher.objects.get(user=self.request.user)
+        serializer.save(student=student, teacher=teacher)
+
+
+class TeacherPostHomeWorksAPIView(ListAPIView):
+    queryset = HomeWork.objects.all()
+    serializer_class = HomeWorkSerializer
+    permission_classes = [IsAuthenticated]
+
+    def homework_create(self, serializer):
+        teacher = Teacher.objects.get(user=self.request.user)
+        group_id = self.request.data.get('group')
+        subject = teacher.my_subject
+
+

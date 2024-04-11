@@ -106,7 +106,7 @@ DATABASES = {
         'NAME': "school",
         'USER': "django_pavel",
         "PASSWORD": "password",
-        "HOST": "localhost",
+        "HOST": "db",
         "PORT": 5432,
     }
 }
@@ -167,6 +167,7 @@ EMAIL_HOST_PASSWORD = 'duzmhdphciqnxmdu'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiels'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -181,7 +182,7 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_BEAT_SCHEDULE = {
 
     'send-reminders-every-hour': {
-        'task': 'Event.tasks.send_email_reminders',
+        'task': 'app.tasks.send_email_reminders',
         'schedule': crontab(minute="0"),  # запускать каждый час в начале часа
     },
 }

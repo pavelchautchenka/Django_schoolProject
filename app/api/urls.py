@@ -25,6 +25,8 @@ urlpatterns = [
     path('parent/schedule/', views.ParentScheduleAPIView.as_view(), name='api_parent_schedule'),
 
     path('teacher/schedule/', views.TeacherDashboardAPIView.as_view(), name='api_teacher_schedule'),
+    path('teacher/send_message/', views.TeacherSendMessageAPIView.as_view(), name='api_teacher_send_message'),
+    path('teacher/post_grade/', views.TeacherPostGradeAPIView.as_view(), name='api_teacher_post_grade'),
 
 
 ]
