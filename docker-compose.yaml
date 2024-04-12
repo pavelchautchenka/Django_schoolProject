@@ -38,7 +38,9 @@ services:
     image: school:0.1
     restart: always
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate --no-input &&
+             python manage.py runserver 0.0.0.0:8000"
     environment:
       DJANGO_SUPERUSER_EMAIL: admin@example.com
       DJANGO_SUPERUSER_USERNAME: papa

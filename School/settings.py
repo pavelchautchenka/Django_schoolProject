@@ -2,6 +2,8 @@ from datetime import timedelta
 from celery.schedules import crontab
 from pathlib import Path
 from datetime import timedelta
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -103,11 +105,11 @@ WSGI_APPLICATION = 'School.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "school",
-        'USER': "django_pavel",
-        "PASSWORD": "password",
-        "HOST": "db",
-        "PORT": 5432,
+        'NAME': os.getenv('DATABASE_NAME', 'school'),
+        'USER': os.getenv('DATABASE_USER', 'django_pavel'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
+        'HOST': os.getenv('DATABASE_HOST', 'localhost'),
+        'PORT': os.getenv('DATABASE_PORT', 5432),
     }
 }
 

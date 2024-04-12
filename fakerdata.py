@@ -178,11 +178,11 @@ def create_schedule_lessons():
 
 
 if __name__ == '__main__':
-    # create_fake_news(100)
-    # create_subject()
-    # create_school_groups()
-    # create_fake_news(100)
-    #create_fake_messages(500)
+     create_fake_news(100)
+     create_subject()
+     create_school_groups()
+     create_fake_news(100)
+     create_fake_messages(500)
 
     # create_student_and_parent(500)
     # create_teachers(30)
